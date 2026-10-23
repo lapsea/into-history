@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100e0c">
+  <meta name="description" content="旋转一件文物，唤醒一段历史。以3D、影像与180°宴饮现场，走近东汉击鼓说唱俑。">
+  <title>入史 · 让文物走进眼前</title>
+  <link rel="icon" type="image/svg+xml" href="assets/site/seal.svg">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+<svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 1-2.5-5.8M20 3v6h-6"/></symbol>
+  <symbol id="i-full" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5M7 10h6m-3-3v6"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5M7 10h6"/></symbol>
+  <symbol id="i-orbit" viewBox="0 0 24 24"><path d="M20 8a8 8 0 0 0-14-3L3 8m0-5v5h5M4 16a8 8 0 0 0 14 3l3-3m0 5v-5h-5"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 12V5a2 2 0 0 1 4 0v6m0-3a2 2 0 0 1 4 0v4m0-2a2 2 0 0 1 4 0v5c0 5-2 7-6 7h-1c-2 0-3-1-4-3l-5-6c-2-3 1-4 3-2l1 1"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="3"/></symbol>
+</defs></svg>
+<header class="site-header" id="header">
+  <a href="#top" class="brand" aria-label="入史首页"><span class="brand-name">入史<span class="seal">入<br>史</span></span><span class="brand-en">INTO HISTORY</span></a>
+  <nav aria-label="主导航"><button class="nav-link active" data-nav="observe">观物<span>OBSERVE</span></button><button class="nav-link" data-nav="awaken">唤醒<span>AWAKEN</span></button><a class="nav-link" href="#scene" data-nav="scene">入境<span>EXPLORE</span></a></nav>
+  <div class="header-actions"><button class="icon-button" id="about-button" aria-label="关于本次展览"><svg><use href="#i-info"/></svg></button><button class="icon-button" id="page-fullscreen" aria-label="网页全屏"><svg><use href="#i-full"/></svg></button></div>
+</header>
+<main>
+  <section class="hero" id="top" aria-labelledby="artifact-title">
+    <div class="hero-atmosphere" aria-hidden="true"></div><div class="hero-halo" aria-hidden="true"></div>
+    <div class="hero-media is-cutout" id="hero-media"><img id="artifact-poster" class="artifact-poster" src="assets/site/storyteller-cutout.png" alt="文物模型加载预览"><div id="local-model" class="local-model" data-state="loading"></div><div class="media-vignette"></div><div class="local-model-status" id="local-model-status" role="status"><span class="loader"></span><span id="local-model-message">正在加载本地模型…</span><button id="model-retry" hidden>重新加载 ↗</button></div><span class="model-drag-hint" id="model-drag-hint" hidden><i class="gold-dot"></i>拖动旋转 · 滚轮缩放</span></div>
+    <div class="hero-film" id="hero-film" aria-hidden="true" inert data-state="closed"><video id="hero-film-video" muted playsinline preload="metadata"></video><div class="hero-film-controls"><button class="icon-button" id="hero-film-pause" aria-label="暂停视频"><svg><use href="#i-pause"/></svg></button><button class="icon-button" id="hero-film-close" aria-label="回到3D文物"><svg><use href="#i-close"/></svg></button></div><button id="hero-film-retry" class="video-retry" hidden>点击播放</button></div>
+    <div class="hero-copy"><div class="eyebrow"><span class="small-rule"></span><span id="artifact-era">东汉 · 陶器</span></div><h1 id="artifact-title">击鼓<br>说唱俑</h1>
+      <button class="awaken-button" id="awaken-button"><span class="play-disc"><svg><use href="#i-play"/></svg></span><span><strong>唤醒这件文物</strong></span><span class="cta-arrow">↗</span></button>
+    </div>
+    <div class="hero-side-tools"><button id="orbit-button" aria-label="自动旋转3D模型" aria-pressed="false"><span><svg><use href="#i-orbit"/></svg></span>旋转</button><button id="detail-button" aria-label="查看文物细节"><span><svg><use href="#i-plus"/></svg></span>细节</button><button id="hero-reset" aria-label="回到文物初始状态"><span><svg><use href="#i-reset"/></svg></span>复位</button></div>
+    <button class="artifact-hotspot" id="artifact-hotspot" aria-label="了解举槌抱鼓的姿态"><span class="hotspot-ring"></span><span class="hotspot-line"></span><span class="hotspot-label">一鼓一槌，正在开场</span></button>
+    <div class="hero-foot"><div class="journey" aria-label="体验章节"><button class="journey-step active" data-step="observe"><span>01</span> 观其形<i></i></button><span class="journey-line"></span><button class="journey-step" data-step="awaken"><span>02</span> 唤其神<i></i></button><span class="journey-line"></span><button class="journey-step" data-step="scene"><span>03</span> 入其境<i></i></button></div><a href="#scene" class="scroll-invitation">向下入席 <span>↓</span></a></div>
+
+  </section>
+
+  <section class="scene-section section-wrap" id="scene" aria-labelledby="scene-title">
+    <div class="section-heading"><div><h2 id="scene-title">汉代宴席</h2></div><button class="outline-button" id="scene-fullscreen"><svg><use href="#i-full"/></svg>全屏入境</button></div>
+    <div class="panorama" id="panorama" tabindex="0" role="region" aria-label="东汉宴席全景，拖动或使用方向键环顾，滚轮缩放">
+      <video id="panorama-intro" muted playsinline preload="auto" hidden src="网站素材/东汉说唱俑/视频-文物变真人.mp4"></video><canvas id="panorama-canvas" aria-label="180度东汉宴席场景"></canvas><video id="panorama-video" muted loop playsinline preload="metadata" aria-hidden="true" hidden src="assets/site/panorama-new.mp4"></video>
+      <div class="panorama-shade"></div>
+      <div class="pano-loading" id="pano-loading"><span class="loader"></span>正在展开历史现场</div><button class="video-retry" id="pano-video-retry" hidden>播放全景</button>
+      <div class="pano-bottom"><div class="heading-indicator"><span>西</span><div class="heading-track"><i id="heading-needle"></i></div><span>东</span></div><span class="drag-hint"><svg><use href="#i-hand"/></svg>左右环顾 · 上下探索</span><div class="pano-controls"><button class="icon-button" id="pano-zoom-out" aria-label="缩小全景"><svg><use href="#i-minus"/></svg></button><button class="icon-button" id="pano-zoom-in" aria-label="放大全景"><svg><use href="#i-plus"/></svg></button><button class="icon-button" id="pano-reset" aria-label="回到全景初始视角"><svg><use href="#i-reset"/></svg></button><button class="icon-button" id="pano-fullscreen" aria-label="全景全屏"><svg><use href="#i-full"/></svg></button></div></div>
+      <div class="scene-caption" id="scene-caption" hidden><button class="icon-button" id="scene-caption-close" aria-label="关闭全景说明"><svg><use href="#i-close"/></svg></button><p class="eyebrow" id="caption-kicker"></p><h3 id="caption-title"></h3><p id="caption-body"></p></div>
+    </div>
+    <div class="scene-footnote"><span>历史情境 · 创意演绎</span><button class="text-button" id="performance-button">单独看一段表演 <span>↗</span></button></div>
+    <div class="scene-alternative" id="scene-alternative" hidden><div><p class="eyebrow">另一段历史正在眼前展开</p><h3 id="alternative-title"></h3><button class="outline-button" id="alternative-play"><svg><use href="#i-play"/></svg>播放历史片段</button></div><img id="alternative-image" alt="文物历史片段预览"></div>
+  </section>
+
+  <section class="collection-ring-section" id="collection" aria-labelledby="collection-title">
+    <h2 class="collection-title" id="collection-title">珍藏未尽</h2>
+    <div class="collection-ring" id="collection-ring" data-state="idle">
+      <div class="ring-glow" aria-hidden="true"></div><div class="ring-loading" role="status" aria-label="正在加载文物模型"><span class="loader"></span></div>
+      <button id="ring-retry" class="icon-button" hidden aria-label="重新加载文物展台"><svg><use href="#i-reset"/></svg></button>
+    </div>
+  </section>
+</main>
+<footer><a class="footer-brand" href="#top">入史<span>INTO HISTORY</span></a><button class="text-button" id="credits-button">素材与创作说明 ↗</button></footer>
+<dialog id="cinema" class="cinema"><div class="cinema-heading"><div><p class="eyebrow" id="cinema-kicker">文物复活</p><h2 id="cinema-title">一槌未落，笑意千年</h2></div><button class="icon-button" id="cinema-close" aria-label="关闭视频"><svg><use href="#i-close"/></svg></button></div><div class="cinema-screen"><video id="cinema-video" controls muted playsinline preload="metadata"></video><button class="video-retry" id="video-retry" hidden>点击播放</button></div><div class="cinema-foot"><span id="cinema-note">文物活化 · 创意演绎 · 无声呈现</span><button class="outline-button" id="cinema-next">走进历史现场 <svg><use href="#i-arrow"/></svg></button></div></dialog>
+<dialog id="info-dialog" class="info-dialog"><button class="icon-button dialog-close" id="info-close" aria-label="关闭说明"><svg><use href="#i-close"/></svg></button><p class="eyebrow" id="info-kicker"></p><h2 id="info-title"></h2><div id="info-body"></div></dialog>
+<dialog id="model-inspector" class="model-inspector" aria-label="文物3D近观"><div id="inspector-model" class="inspector-model"></div><div class="inspector-controls"><button class="icon-button" id="inspector-reset" aria-label="复位模型"><svg><use href="#i-reset"/></svg></button><button class="icon-button" id="inspector-close" aria-label="关闭模型近观"><svg><use href="#i-close"/></svg></button></div><div class="inspector-loading" id="inspector-loading" role="status" aria-label="正在加载模型"><span class="loader"></span></div><button class="icon-button inspector-retry" id="inspector-retry" hidden aria-label="重新加载模型"><svg><use href="#i-reset"/></svg></button></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

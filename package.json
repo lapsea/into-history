@@ -1,0 +1,21 @@
+{
+  "name": "into-history",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "check": "node --check app.js && node --check hero-film.js && node --check collection-ring.js && node --check artifact-lighting.js && node --check model-viewer.js && node --check panorama.js && node --check server.mjs",
+    "prepare-ring": "node scripts/prepare-ring.mjs"
+  },
+  "dependencies": {
+    "three": "0.180.0",
+    "meshoptimizer": "0.25.0"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "4.2.1",
+    "@gltf-transform/extensions": "4.2.1",
+    "@gltf-transform/functions": "4.2.1",
+    "sharp": "0.34.4"
+  }
+}
